@@ -71,3 +71,9 @@ def runApp(containerName, tag, dockerHubUser, httpPort){
     sh "docker run -d --rm -p $httpPort:$httpPort --name $containerName $dockerHubUser/$containerName:$tag"
     echo "Application started on port: ${httpPort} (http)"
 }
+
+post {
+    always {
+        emailext body: 'Job Complete', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Completed'
+    }
+}
